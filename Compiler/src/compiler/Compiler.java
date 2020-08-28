@@ -25,7 +25,7 @@ public class Compiler {
      */
     public static void main(String[] args) throws IOException, CloneNotSupportedException {
         // TODO code application logic here
-        Compiler("/Users/siddharthgupta/Desktop/Compiler/javaCompiler.txt");
+        Compiler("/Users/siddharthgupta/Desktop/Compiler/javaCompiler.txt");//THJ PARAMETER IS THE PATH TO THE FILE THAT HAS CODE WRITTEN IN flowthon
     }
     public static void Compiler(String path) throws IOException, CloneNotSupportedException{
         Path p = Paths.get(path);
