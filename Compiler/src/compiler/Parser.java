@@ -68,8 +68,7 @@ public class Parser {//class for the parsing component of the language
     
     public void statement() throws CloneNotSupportedException{ //this is the first piece of the grammar that initiates the recursive structure of the context-free grammar commented above
         if (curToken.name.equals("PRINT")){
-            i = i+1;
-            curToken = tokens.get(i);
+            nextToken();
             Token output = expression();
             if (output.kind.equals("VAR")){
                 if (variables.containsKey(output.name)){
@@ -93,19 +92,16 @@ public class Parser {//class for the parsing component of the language
         }
         
         else if (curToken.name.equals("MAKE")){
-            i = i+1;
-            curToken = tokens.get(i);
+            nextToken();
 
             if (curToken.kind.equals("VAR")){
                 Token l = curToken;
                 String left = l.name;
-                i = i+1;
-                curToken = tokens.get(i);
+                nextToken();
                 
                 
                 if (curToken.kind.equals("ASSIGN")){
-                    i = i+1;
-                    curToken = tokens.get(i);
+                    nextToken();
                     Token right = expression();
                     variables.put(left, right);
                 }
@@ -126,22 +122,18 @@ public class Parser {//class for the parsing component of the language
                     curToken = tokens.get(i);
                     while (curToken.kind.equals("CLOSEBLOCK")==false){
                         statement();
-                        i = i+1;
-                        curToken = tokens.get(i);
+                        nextToken();
                     }
                 }
             }else{
                 while (curToken.kind.equals("CLOSEBLOCK") == false){
-                        i = i+1;
-                        curToken = tokens.get(i);
+                        nextToken();
                     }
-                i = i+1;
-                curToken = tokens.get(i);
+                nextToken();
                 statement();
             }
         }else if (curToken.name.equals("WHILE")){
-            i = i+1;
-            curToken = tokens.get(i);
+            nextToken();
             
             int leftStart = i;
             Token left = expression();
@@ -149,8 +141,7 @@ public class Parser {//class for the parsing component of the language
             
             Token operator = curToken;
             
-            i = i+1;
-            curToken = tokens.get(i);
+            nextToken();
             
             int rightStart = i;
             Token right = expression();
@@ -171,8 +162,7 @@ public class Parser {//class for the parsing component of the language
                     while (output.bool == true){
                         while (curToken.kind.equals("CLOSEBLOCK") == false){
                             statement();
-                            i = i+1;
-                            curToken = tokens.get(i);
+                            nextToken();
                         }
                         ArrayList<Token> allTokens = this.tokens;
                         int curIndex = i;
@@ -200,22 +190,18 @@ public class Parser {//class for the parsing component of the language
                 }
             }else{
                 while (curToken.kind.equals("CLOSEBLOCK") == false){
-                        i = i+1;
-                        curToken = tokens.get(i);
+                        nextToken();
                     }
-                i = i+1;
-                curToken = tokens.get(i);
+                nextToken();
                 statement();
             }
         }else if (curToken.kind.equals("VAR")){
             if (variables.containsKey(curToken.name)){
                 String left = curToken.name;
-                i = i+1;
-                curToken = tokens.get(i);
+                nextToken();
                 
                 if (curToken.kind.equals("ASSIGN")){
-                    i = i+1;
-                    curToken = tokens.get(i);
+                    nextToken();
                     Token right = expression();
                     variables.replace(left, right);
                 }
