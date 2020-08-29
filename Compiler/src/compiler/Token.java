@@ -61,6 +61,7 @@ public class Token implements Cloneable{
     add("OR");
     add("IF");
     add("AND");
+    
 }};
         if (keyWords.contains(key)){
             return true;
@@ -69,6 +70,21 @@ public class Token implements Cloneable{
         
         
         
+    }
+    public static boolean isMethod(String dataType, String method){
+        if (dataType.equals("ARRAY")){
+            ArrayList<String> methods = new ArrayList<String>() {{
+                add("add");
+                add("delete");
+                add("sum");
+                add("intersect");
+            }}; 
+            if (methods.contains(method)){
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
     
     public String getID(){
@@ -89,8 +105,13 @@ public class Token implements Cloneable{
     public void setStringValue(String string){
         this.stringValue = string;
     }
-    public void add(Token token){
-        this.array.add(token);
+    public void add(Token element){
+        this.array.add(element);
+        if (element.kind.equals("NUMBER")){
+            this.arrayToString += element.value + ",";
+        }else{
+            this.arrayToString += element.stringValue + ",";
+        }
     }
     
     public void reset(){

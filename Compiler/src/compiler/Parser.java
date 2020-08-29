@@ -81,7 +81,11 @@ public class Parser {//class for the parsing component of the language
                 }
             }
             if (output.kind.equals("ARRAY")){
-                System.out.println(output.arrayToString);
+                if (output.arrayToString.length() == 1){
+                    System.out.println("[]");
+                }else{
+                    System.out.println(output.arrayToString.substring(0, output.arrayToString.length()-1) + "]");
+                }
             }
             else if (output.kind.equals("NUMBER")){
                 System.out.println(output.value);
@@ -197,6 +201,8 @@ public class Parser {//class for the parsing component of the language
             }
         }else if (curToken.kind.equals("VAR")){
             if (variables.containsKey(curToken.name)){
+                Token l = curToken;
+                Token data = null;
                 String left = curToken.name;
                 nextToken();
                 
@@ -204,6 +210,29 @@ public class Parser {//class for the parsing component of the language
                     nextToken();
                     Token right = expression();
                     variables.replace(left, right);
+                    l = (Token) variables.get(left);
+                }else if (curToken.kind.equals("CALLING")){
+                    l = (Token) variables.get(left);
+                    nextToken();
+                    if (curToken.kind.equals("METHOD")){
+                        if (curToken.name.equals("add")){
+                            nextToken();
+                            if (curToken.kind.equals("OPENPAR")){
+                                nextToken();
+                                if (curToken.kind.equals("NUMBER") || curToken.kind.equals("STRING") || curToken.kind.equals("VAR")){
+                                    if (curToken.kind.equals("VAR")){
+                                        curToken = (Token) variables.get(curToken.name);
+                                    }
+                                    data = curToken;
+                                    l.add(data);
+                                    nextToken();
+                                    if (curToken.kind.equals("CLOSEPAR")){
+                                        nextToken();
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -241,29 +270,19 @@ public class Parser {//class for the parsing component of the language
             }
             while(curToken.kind.equals("CLOSEBRACKET") == false){
                 Token element = expression();
-                array.add(element);
                 if (curToken.kind.equals("CLOSEBRACKET")){
-                    if (element.kind.equals("NUMBER")){
-                        array.arrayToString += element.value;
-                    }else{
-                        array.arrayToString += element.stringValue;
-                    }
+                    array.add(element);
                     break;
                 }
-                if (element.kind.equals("NUMBER")){
-                    array.arrayToString += element.value + ",";
-                }else{
-                    array.arrayToString += element.stringValue + ",";
-                }
-                
                 if (curToken.kind.equals("DELIMETER") == false){
                     System.out.println("error: expecting delimeter after token");
                     System.exit(0);
+                }else{
+                    array.add(element);
                 }
                 nextToken();
                         
             }
-            array.arrayToString += "]";
             left = array;
             
         }
@@ -306,12 +325,12 @@ public class Parser {//class for the parsing component of the language
             System.out.println("ERROR: VALUE EXPECTED AFTER OPERATOR");
             System.exit(0);
         }
-        System.out.println("-----------");
-        System.out.println("Left: " + left.name + " Right: " + right.name);
-        System.out.println("Left: " + left.value);
-        System.out.println("Operator: " + operator.name);
-        System.out.println("Right: " + right.value);
-        System.out.println("-----------");
+//        System.out.println("-----------");
+//        System.out.println("Left: " + left.name + " Right: " + right.name);
+//        System.out.println("Left: " + left.value);
+//        System.out.println("Operator: " + operator.name);
+//        System.out.println("Right: " + right.value);
+//        System.out.println("-----------");
         
         if (right.kind.equals("CLOSEPAR")){
             System.out.println("ERROR: VALUE EXPECTED AFTER OPERATOR");

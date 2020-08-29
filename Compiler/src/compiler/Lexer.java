@@ -87,6 +87,15 @@ public class Lexer {
                 }
                 token = new Token(".", "CALLING");
                 tokens.add(token);
+                i = i+1;
+                String method = "";
+                while (Character.isLetter(input.charAt(i))){
+                    method += input.charAt(i);
+                    i = i+1;
+                }
+                i = i-1;
+                token = new Token(method, "METHOD");
+                tokens.add(token);
             }
             else if (input.charAt(i) == '\"'){
 
