@@ -53,6 +53,9 @@ public class Lexer {
                     curString = curString + " ";
                 }
             }else if (input.charAt(i) == '['){
+                if (curString.length()>0){
+                    makeVariable();
+                }
                 token = new Token("[", "OPENBRACKET");
                 tokens.add(token);    
             }else if (input.charAt(i) == ']'){
@@ -72,6 +75,8 @@ public class Lexer {
                 }
                 token = new Token(s, "EOL");
                 tokens.add(token);
+                
+
             }
             else if (input.charAt(i) == '+' || input.charAt(i) == '-'|| input.charAt(i) == '*'|| input.charAt(i) == '/'){
                 if (curString.length()>0){
@@ -99,15 +104,20 @@ public class Lexer {
             }
             else if (input.charAt(i) == '\"'){
 
-                if (quoteOpen == true){
-                    token = new Token(curString, "STRING");
-                    tokens.add(token);
-                    curString = "";
-                    quoteOpen = false;
+
+                i = i+1;
+                
+                while(input.charAt(i) != '\"'){
+                    if (input.charAt(i) == ';'){
+                        System.out.println("error: missing quotes");
+                        System.exit(0);
+                    }
+                    curString += input.charAt(i);
+                    i = i+1;
                 }
-                else{
-                    quoteOpen = true;
-                }
+                token = new Token(curString, "STRING");
+                tokens.add(token);
+                curString = "";
 
             }else if (input.charAt(i) == '{'){
                 if (curString.length()>0){
@@ -216,9 +226,9 @@ public class Lexer {
             }
             }
         //DEBUG TOOL
-//        for (Token token: tokens){
-//            System.out.println(token.getID());
-//        }
+        for (Token token: tokens){
+            System.out.println(token.getID());
+        }
 
     }
     

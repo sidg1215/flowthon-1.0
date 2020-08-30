@@ -131,8 +131,18 @@ public class Parser {//class for the parsing component of the language
                 }
             }else{
                 while (curToken.kind.equals("CLOSEBLOCK") == false){
-                        nextToken();
+                    nextToken();
+                }
+                if (curToken.name.equals("ELSE")){
+                    if (curToken.kind.equals("OPENBLOCK")){
+                        i = i + 2;
+                        curToken = tokens.get(i);
+                        while (curToken.kind.equals("CLOSEBLOCK")==false){
+                            statement();
+                            nextToken();
+                        }
                     }
+                }
                 nextToken();
                 statement();
             }
@@ -215,7 +225,7 @@ public class Parser {//class for the parsing component of the language
                     l = (Token) variables.get(left);
                     nextToken();
                     if (curToken.kind.equals("METHOD")){
-                        if (curToken.name.equals("add")){
+                        if (curToken.name.equals("add") && l.kind.equals("ARRAY")){
                             nextToken();
                             if (curToken.kind.equals("OPENPAR")){
                                 nextToken();
@@ -231,6 +241,33 @@ public class Parser {//class for the parsing component of the language
                                     }
                                 }
                             }
+                        }else{
+                            System.out.println("error: cannot add elements to " + left + ", " + left + " not an array");
+                            System.exit(0);
+                        }
+                    }
+                }else if (curToken.kind.equals("OPENBRACKET")){
+                    l = (Token) variables.get(left);
+                    if (l.kind.equals("ARRAY")){
+                        nextToken();
+                        if (curToken.kind.equals("NUMBER") || curToken.kind.equals("VAR")){
+                            if (curToken.kind.equals("VAR")){
+                                l = (Token) variables.get(left);
+                            }
+                            int index = (int) curToken.value;
+                            if (index >= l.array.size()){
+                                System.out.println("error: array index out of bounds");
+                                System.exit(0);
+                            }
+                            Token element = l.array.get(index);
+                            System.out.println(element.name);
+                        }
+                        nextToken();
+                        if (curToken.kind.equals("CLOSEBRACKET")){
+                            nextToken();
+                        }else{
+                            System.out.println("error: expecting closing parantheses");
+                            System.exit(0);
                         }
                     }
                 }

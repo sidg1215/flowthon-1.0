@@ -58,6 +58,7 @@ public class Token implements Cloneable{
     add("MAKE");
     add("FOR");
     add("WHILE");
+    add("ELSE");
     add("OR");
     add("IF");
     add("AND");
