@@ -7,6 +7,8 @@ package compiler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -241,7 +243,31 @@ public class Parser {//class for the parsing component of the language
                                     }
                                 }
                             }
-                        }else{
+                        }else if (curToken.name.equals("intersect") && l.kind.equals("ARRAY")){
+                            Set<String> intersection = new HashSet<String>();
+                            nextToken();
+                            if (curToken.kind.equals("OPENPAR")){
+                                nextToken();
+                                Token parameter = expression();
+                                if (parameter.kind.equals("ARRAY")){
+                                    Set<String> a = new HashSet<String>();
+                                    for (Token token : l.array){
+                                        a.add(token.name);
+                                    }
+                                    for (Token token : parameter.array){
+                                        if (a.contains(token.name)){
+                                            intersection.add(token.name);
+                                        }
+                                    }
+                                    System.out.println(intersection);
+                                    nextToken();
+                                    if (curToken.kind.equals("CLOSEPAR")){
+                                        nextToken();
+                                    }
+                                }
+                            }
+                        }
+                        else{
                             System.out.println("error: cannot add elements to " + left + ", " + left + " not an array");
                             System.exit(0);
                         }
