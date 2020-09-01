@@ -144,28 +144,28 @@ public class Parser {//class for the parsing component of the language
                 nextToken();
                 statement();
             }
-        }else if (curToken.name.equals("WHILE")){
-            nextToken();
+        }else if (curToken.name.equals("WHILE")){//if the statement is a WHILE statement
+            nextToken();//go to the next token
             
-            int leftStart = i;
-            Token left = expression();
-            int leftEnd = i;
+            int leftStart = i;//set the beginning of the subsection of the tokens for the left side of the boolean
+            Token left = expression();//calculate the left side of the boolean expression and store it
+            int leftEnd = i;//set the end of the subsection of the tokens for the left side of the boolean
             
-            Token operator = curToken;
+            Token operator = curToken;//operator is set as one of the boolean operators that is used in the if statement
             
-            nextToken();
+            nextToken();//go to the next token
             
-            int rightStart = i;
-            Token right = expression();
-            int rightEnd = i+1;
+            int rightStart = i;//set the beginning of the subsection of the tokens for the right side of the boolean
+            Token right = expression();//calculate the right side of the boolean expression and store it
+            int rightEnd = i+1;//set the end of the subsection of the tokens for the right side of the boolean
             
-            ArrayList<Token> leftTokens = new ArrayList(tokens.subList(leftStart, leftEnd));
-            leftTokens.add(new Token(";", "EOL"));
-            ArrayList<Token> rightTokens = new ArrayList(tokens.subList(rightStart, rightEnd));
+            ArrayList<Token> leftTokens = new ArrayList(tokens.subList(leftStart, leftEnd));//store the tokens used for the left side of the boolean expression
+            leftTokens.add(new Token(";", "EOL"));//adds an EOL token to the end of leftTokens so the lefTokens can be executed in expression()
+            ArrayList<Token> rightTokens = new ArrayList(tokens.subList(rightStart, rightEnd));//store the tokens used for the right side of the boolean expression
             rightTokens.add(new Token(";", "EOL"));
 
-            Token output = compute(left, operator, right);
-            if (output.bool == true){
+            Token output = compute(left, operator, right);//output stores the result of the boolean expression
+            if (output.bool == true){//if output is true
                 if (curToken.kind.equals("OPENBLOCK")){
                     i = i + 2;
                     curToken = tokens.get(i);

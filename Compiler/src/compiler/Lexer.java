@@ -226,9 +226,9 @@ public class Lexer {
             }
             }
         //DEBUG TOOL
-        for (Token token: tokens){
-            System.out.println(token.getID());
-        }
+//        for (Token token: tokens){
+//            System.out.println(token.getID());
+//        }
 
     }
     
