@@ -129,7 +129,10 @@ public class Parser {//class for the parsing component of the language
                     nextToken();//go to the next token
                 }
                 if (curToken.name.equals("ELSE")){//if there is an else statement
+                    nextToken();
+                    System.out.println(curToken.getID());
                     if (curToken.kind.equals("OPENBLOCK")){//check for an open curly bracket
+                        System.out.println("hkjlasdflhjk");
                         i = i + 2;
                         curToken = tokens.get(i);
                         while (curToken.kind.equals("CLOSEBLOCK")==false){
