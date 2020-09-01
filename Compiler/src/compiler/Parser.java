@@ -69,27 +69,17 @@ public class Parser {//class for the parsing component of the language
     
     
     public void statement() throws CloneNotSupportedException{ //this is the first piece of the grammar that initiates the recursive structure of the context-free grammar commented above
-        if (curToken.name.equals("PRINT")){
-            nextToken();
-            Token output = expression();
-            if (output.kind.equals("VAR")){
-                if (variables.containsKey(output.name)){
-                    while (variables.containsKey(output.name)){
-                        output = (Token) variables.get(output.name);                        
-                    }
-                }else{
-                    System.out.println("VARIABLE " + output.name + " DOES NOT EXIST");
-                    System.exit(0);
-                }
-            }
-            if (output.kind.equals("ARRAY")){
-                if (output.arrayToString.length() == 1){
+        if (curToken.name.equals("PRINT")){//checks if the current statement is a PRINT statement
+            nextToken();//goes to next token
+            Token output = expression();//stores output to be printed in Token output
+            if (output.kind.equals("ARRAY")){//if the token stored in output is an array
+                if (output.arrayToString.length() == 1){//if the length of output is 1
                     System.out.println("[]");
-                }else{
+                }else{//print the entire array
                     System.out.println(output.arrayToString.substring(0, output.arrayToString.length()-1) + "]");
                 }
             }
-            else if (output.kind.equals("NUMBER")){
+            else if (output.kind.equals("NUMBER")){//if the token stored in output is a number
                 System.out.println(output.value);
             }else{
                 System.out.println(output.stringValue);
@@ -97,46 +87,49 @@ public class Parser {//class for the parsing component of the language
             
         }
         
-        else if (curToken.name.equals("MAKE")){
-            nextToken();
+        else if (curToken.name.equals("MAKE")){//checks if the current statement is a MAKE statement
+            nextToken();//goes to the next token
 
-            if (curToken.kind.equals("VAR")){
-                Token l = curToken;
-                String left = l.name;
-                nextToken();
+            if (curToken.kind.equals("VAR")){//if the current token is of the type variable
+                Token l = curToken;//sets the left side of the assignment 
+                String left = l.name;//stores the name of the left side of the assignment
+                nextToken();//goes to the next token
                 
                 
-                if (curToken.kind.equals("ASSIGN")){
-                    nextToken();
-                    Token right = expression();
-                    variables.put(left, right);
+                if (curToken.kind.equals("ASSIGN")){//checks to see if the current token is an equal sign
+                    nextToken();//goes to the next token
+                    Token right = expression();//calculates the right side of the assignment
+                    variables.put(left, right);//stores the rightside of the assignment in the variables hash table
+                }else{
+                    System.out.println("error: expecting an equal sign");
+                    System.exit(0);
                 }
             }else{
                 System.out.println("ERROR: EXPECTING AN IDENTIFIER ON LEFT SIDE");
                 System.exit(0);
             }
-        }else if (curToken.name.equals("IF")){
-            nextToken();
-            Token left = expression();
-            Token operator = curToken;
-            nextToken();
-            Token right = expression();            
-            Token output = compute(left, operator, right);
-            if (output.bool == true){
-                if (curToken.kind.equals("OPENBLOCK")){
-                    i = i + 2;
+        }else if (curToken.name.equals("IF")){//checks if the current statement is an IF statement
+            nextToken();//goes to the next token
+            Token left = expression();//calculates the left side of the boolean expression and stores it
+            Token operator = curToken;//operator is set as one of the boolean operators that is used in the if statement
+            nextToken();//goes to the next token
+            Token right = expression();//calculates the right side of the boolean expression and stores it           
+            Token output = compute(left, operator, right);//calculates whether the boolean expression is true or false and stores it in the variable output
+            if (output.bool == true){//if the expression is true
+                if (curToken.kind.equals("OPENBLOCK")){//check if the current token is a curly bracket, indicating that the 
+                    i = i + 2;//skips the "EOL" token on the end of the current line which has the OPENBLOCK token and goes to the next line
                     curToken = tokens.get(i);
-                    while (curToken.kind.equals("CLOSEBLOCK")==false){
-                        statement();
-                        nextToken();
+                    while (curToken.kind.equals("CLOSEBLOCK")==false){//while the current token is not a CLOSEBLOCK token...
+                        statement();//execute a statement
+                        nextToken();//go to the next token after the end of the statement
                     }
                 }
-            }else{
-                while (curToken.kind.equals("CLOSEBLOCK") == false){
-                    nextToken();
+            }else{//if the boolean expression is not true...
+                while (curToken.kind.equals("CLOSEBLOCK") == false){//while the current token is not a curly closing bracket...
+                    nextToken();//go to the next token
                 }
-                if (curToken.name.equals("ELSE")){
-                    if (curToken.kind.equals("OPENBLOCK")){
+                if (curToken.name.equals("ELSE")){//if there is an else statement
+                    if (curToken.kind.equals("OPENBLOCK")){//check for an open curly bracket
                         i = i + 2;
                         curToken = tokens.get(i);
                         while (curToken.kind.equals("CLOSEBLOCK")==false){
@@ -287,6 +280,9 @@ public class Parser {//class for the parsing component of the language
                             }
                             Token element = l.array.get(index);
                             System.out.println(element.name);
+                        }else{
+                            System.out.println("error: expecitng integer as a parameter");
+                            System.exit(0);
                         }
                         nextToken();
                         if (curToken.kind.equals("CLOSEBRACKET")){
@@ -317,7 +313,12 @@ public class Parser {//class for the parsing component of the language
         boolean changeSign = this.checkForNegative();
         Token left = (Token) curToken.clone();
         if (left.kind.equals("VAR")){
-            left = ((Token) variables.get(left.name));
+            if (variables.containsKey(left.name)){
+                left = ((Token) variables.get(left.name));
+            }else{
+                System.out.println("variable " + left.name + " does not exist");
+                System.exit(0);
+            }
         }
         
         if (left.kind.equals("OPENPAR")){
