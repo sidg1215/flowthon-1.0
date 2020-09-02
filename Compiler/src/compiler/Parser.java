@@ -166,10 +166,10 @@ public class Parser {//class for the parsing component of the language
 
             Token output = compute(left, operator, right);//output stores the result of the boolean expression
             if (output.bool == true){//if output is true
-                if (curToken.kind.equals("OPENBLOCK")){
+                if (curToken.kind.equals("OPENBLOCK")){//if the current token is an open curly bracket
                     i = i + 2;
-                    curToken = tokens.get(i);
-                    int startIndex = i;
+                    curToken = tokens.get(i);//skip the EOL and go to the relevant token
+                    int startIndex = i;//this is the 
                     int endIndex;
                     while (output.bool == true){
                         while (curToken.kind.equals("CLOSEBLOCK") == false){
