@@ -169,20 +169,20 @@ public class Parser {//class for the parsing component of the language
                 if (curToken.kind.equals("OPENBLOCK")){//if the current token is an open curly bracket
                     i = i + 2;
                     curToken = tokens.get(i);//skip the EOL and go to the relevant token
-                    int startIndex = i;//this is the 
-                    int endIndex;
-                    while (output.bool == true){
-                        while (curToken.kind.equals("CLOSEBLOCK") == false){
+                    int startIndex = i;//this is the index of the first token that is going to be executed in the WHILE block
+                    int endIndex;//this is the index of the last token (expecting the index of a CLOSEBLOCK) that dentoes the end of the loop and the token to go to when the boolean expression is false
+                    while (output.bool == true){//while the boolean expression is true...
+                        while (curToken.kind.equals("CLOSEBLOCK") == false){//keep going through the WHILE block
                             statement();
                             nextToken();
                         }
-                        ArrayList<Token> allTokens = this.tokens;
-                        int curIndex = i;
+                        ArrayList<Token> allTokens = this.tokens;//store the actual tokens of the program in a temp variable
+                        int curIndex = i;//store the current index in a temp varaiable
 
-                        this.tokens = leftTokens;
+                        this.tokens = leftTokens; //set the tokens to be used as the tokens that are needed for the left side of the boolean expression
                         i = 0;
                         curToken = tokens.get(i);
-                        left = expression();
+                        left = expression();//calculate the left side of the boolean expression
                         
                         this.tokens = rightTokens;
                         i = 0;
@@ -195,8 +195,9 @@ public class Parser {//class for the parsing component of the language
                         curToken = tokens.get(i);
                         
                         output = compute(left, operator, right);
-                        if (output.bool == false){
-                            i = endIndex;
+                        if (output.bool == false){//if the re-calculated boolean expression is false
+                            i = endIndex;//set the current index as endIndex
+                            curToken = tokens.get(i);
                         }
                     }
                 }
@@ -207,8 +208,8 @@ public class Parser {//class for the parsing component of the language
                 nextToken();
                 statement();
             }
-        }else if (curToken.kind.equals("VAR")){
-            if (variables.containsKey(curToken.name)){
+        }else if (curToken.kind.equals("VAR")){//if the curToken is of type VAR
+            if (variables.containsKey(curToken.name)){//check if curToken exists as a defined variable
                 Token l = curToken;
                 Token data = null;
                 String left = curToken.name;
